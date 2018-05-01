@@ -28,11 +28,8 @@ if __name__ == '__main__':
 
     # parser the command line arguments
     parser = argparse.ArgumentParser(description="Spellchecker Evaluation")
-    #parser.add_argument("test_file", help="Input file in UTF-8")
     parser.add_argument("system_output", help="Model output file")
     parser.add_argument("gold_file", help="Gold file in UTF-8")
-    #parser.add_argument("n_best", help="Evaluate top-n suggestions", type=int)
-    #parser.add_argument("dataset_name", help="Name of the Test")
     args = parser.parse_args()
 
     korektor_evaluation = spelleval.SpellEval(args.system_output, args.gold_file)
