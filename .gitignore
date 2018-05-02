@@ -24,6 +24,7 @@
 #directory
 bin/
 tmp/
+.idea/
 
 # Logs and databases #
 ######################

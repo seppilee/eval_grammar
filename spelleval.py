@@ -189,16 +189,13 @@ class SpellEval:
 
         # fill/update true/false positives for correction/detection
         for err_loc in self.system_suggestions.keys():
-            #print err_loc
             if err_loc in self.gold_standard.keys():
-                #print err_loc
                 self.tp_d += 1  # right detection comparing with gold corpus
                 word_suggestions = self.system_suggestions[err_loc]
                 #print word_suggestions
                 error_found = False
                 i = 0;
                 while i < len(self.system_suggestions[err_loc]):
-                    print self.gold_standard[err_loc][1]
                     if word_suggestions[i] == self.gold_standard[err_loc][1]:
                         error_found = True 
                         self.tp_c[i] += 1  # right correction
@@ -208,7 +205,6 @@ class SpellEval:
                             j += 1
                         break
                     else:
-                        print i
                         self.fp_c[i] += 1  # fales correction
                     i += 1
                 if len(self.system_suggestions[err_loc]) < self.nbest:
