@@ -22,8 +22,6 @@ optional arguments:
   -h, --help     show this help message and exit
 """
 
-
-
 if __name__ == '__main__':
 
     # parser the command line arguments
@@ -34,7 +32,7 @@ if __name__ == '__main__':
 
     korektor_evaluation = spelleval.SpellEval(args.model_output, args.reference_file)
     korektor_evaluation.print_summary()
-    print ""
+    print("")
     korektor_evaluation.evaluate()
     korektor_evaluation.print_results()
 

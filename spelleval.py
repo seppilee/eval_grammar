@@ -48,7 +48,7 @@ class SpellEval:
         self.nbest = 1
 
         # name of the dataset
-        self.dataset_name = "HalloTalk"
+        self.dataset_name = "Grammar Correction"
 
         # results : spelling error detection
         self.precision_d = 0.0
@@ -83,7 +83,7 @@ class SpellEval:
         out_file_lines = fH[1].readlines()
 
         if len(out_file_lines) != len(gold_file_lines):
-            print "error: file size differ between the test file and gold file"
+            print("error: file size differ between the test file and gold file")
             sys.exit(1)
 
         self.close_files(fH)
@@ -96,7 +96,9 @@ class SpellEval:
         
         # get suggestions from system output
         self.gold_standard = self.get_suggestions_map(gold_file_lines)
+        print(self.gold_standard) 
         self.system_suggestions = self.get_suggestions_map(out_file_lines)
+        print(self.system_suggestions)
 
         self.corpus_size = len(out_file_lines)
 
@@ -123,8 +125,8 @@ class SpellEval:
         try:
             gfh = codecs.open(gold_filename, "r", encoding="utf-8")
             ofh = codecs.open(output_filename, "r", encoding="utf-8")
-        except IOError, v:
-            print v
+        except IOError as err:
+            print("I/O error: {0}".format(err))
         else:
             file_handles = [gfh, ofh]
         return file_handles
@@ -142,7 +144,7 @@ class SpellEval:
             gold_words = re.split(r'\s+', gold_line)
 
             if len(test_words) != len(gold_words):
-                print 'error: the number of words in test sentence and gold sentence differ. Error line number - ', i
+                print('error: the number of words in test sentence and gold sentence differ. Error line number - ', i)
             j = 0
             while j < len(test_words):
                 if test_words[j] != gold_words[j]:
@@ -157,7 +159,6 @@ class SpellEval:
 
         while i < len(out_file_lines):
             out_line = out_file_lines[i]
-            # # output format: xml
             out_line = re.sub(r'\n$', '', out_line)
             matches = re.findall(r'(<(del|ins)> (.+?) \<\/\2\>)', out_line)
             if matches:
@@ -190,13 +191,16 @@ class SpellEval:
         # fill/update true/false positives for correction/detection
         for err_loc in self.system_suggestions.keys():
             if err_loc in self.gold_standard.keys():
+                #print(err_loc)
                 self.tp_d += 1  # right detection comparing with gold corpus
                 word_suggestions = self.system_suggestions[err_loc]
-                #print word_suggestions
+                #print(word_suggestions)
                 error_found = False
                 i = 0;
+                #print(len(self.system_suggestions[err_loc]))
                 while i < len(self.system_suggestions[err_loc]):
-                    if word_suggestions[i] == self.gold_standard[err_loc]:
+                    #print(word_suggestions[i], self.gold_standard[err_loc][i])
+                    if word_suggestions[i] == self.gold_standard[err_loc][i]:
                         error_found = True 
                         self.tp_c[i] += 1  # right correction
                         j = i+1
@@ -251,44 +255,43 @@ class SpellEval:
             self.f05_c[i] = 1.25 * (self.precision_c[i] * self.recall_c[i]) / (0.25 * self.precision_c[i]) + self.recall_c[i]
             self.accuracy_c[i] = (self.tp_c[i] + self.tn_c[i])/ (self.tp_c[i] + self.tn_c[i] + self.fp_c[i] + self.fn_c[i])
 
-    
 
     def print_results(self):
-        print ''.rjust(20), "***************"
-        print ''.rjust(20), "Error detection"
-        print ''.rjust(20), "***************"
-        print 'TP:', self.tp_d, 'FP:', self.fp_d, 'FN:', self.tn_d, 'FN:', self.fn_d
-        print 'Precision'.ljust(10), ':', '{:5.1f}'.format(self.precision_d * 100.0)
-        print 'Recall'.ljust(10), ':', '{:5.1f}'.format(self.recall_d * 100.0)
-        print 'F1-score'.ljust(10), ':', '{:5.1f}'.format(self.f1_d * 100.0)
-        print 'F0.5-score'.ljust(10), ':', '{:5.1f}'.format(self.f05_d * 100.0)
-        print 'Accuracy'.ljust(10), ':', '{:5.1f}'.format(self.accuracy_d * 100.0)
-        print ""
+        print(''.rjust(20), "***************")
+        print(''.rjust(20), "Error detection")
+        print(''.rjust(20), "***************")
+        print('TP:', self.tp_d, 'FP:', self.fp_d, 'FN:', self.tn_d, 'FN:', self.fn_d)
+        print('Precision'.ljust(10), ':', '{:5.1f}'.format(self.precision_d * 100.0))
+        print('Recall'.ljust(10), ':', '{:5.1f}'.format(self.recall_d * 100.0))
+        print('F1-score'.ljust(10), ':', '{:5.1f}'.format(self.f1_d * 100.0))
+        print('F0.5-score'.ljust(10), ':', '{:5.1f}'.format(self.f05_d * 100.0))
+        print('Accuracy'.ljust(10), ':', '{:5.1f}'.format(self.accuracy_d * 100.0))
+        print("")
 
-        print ''.rjust(20), "***************"
-        print ''.rjust(20), "Error correction"
-        print ''.rjust(20), "***************"
-        print ""
-        print 'TP:', self.tp_c, 'FP:', self.fp_c, 'FN:', self.tn_c, 'FN:', self.fn_c
-        print "top-n".ljust(6), 'Precision'.rjust(10), 'Recall'.rjust(10), 'F1-score'.rjust(10), 'F05-score'.rjust(10)
-        print "-----".ljust(6), '---------'.rjust(10), '------'.rjust(10), '--------'.rjust(10), '--------'.rjust(10)
+        print(''.rjust(20), "***************")
+        print(''.rjust(20), "Error correction")
+        print(''.rjust(20), "***************")
+        print("")
+        print('TP:', self.tp_c, 'FP:', self.fp_c, 'FN:', self.tn_c, 'FN:', self.fn_c)
+        print("top-n".ljust(6), 'Precision'.rjust(10), 'Recall'.rjust(10), 'F1-score'.rjust(10), 'F05-score'.rjust(10), 'Accuracy'.rjust(10))
+        print("-----".ljust(6), '---------'.rjust(10), '------'.rjust(10), '--------'.rjust(10), '--------'.rjust(10), '--------'.rjust(10))
         i = 0
         while i < len(self.precision_c):
             top = 'top-' + str(i+1)
-            print top.ljust(6), ''.rjust(4), '{:5.1f}'.format(self.precision_c[i]*100.0), \
+            print(top.ljust(6), ''.rjust(4), '{:5.1f}'.format(self.precision_c[i]*100.0), \
                 ''.rjust(4), '{:5.1f}'.format(self.recall_c[i]*100.0), \
                 ''.rjust(4), '{:5.1f}'.format(self.f1_c[i] * 100.0), \
                 ''.rjust(4), '{:5.1f}'.format(self.f05_c[i] * 100.0), \
-                ''.rjust(4), '{:5.1f}'.format(self.accuracy_c[i] * 100.0)
+                ''.rjust(4), '{:5.1f}'.format(self.accuracy_c[i] * 100.0))
             i += 1
 
     def print_summary(self):
-        print ''.rjust(20), "***************"
-        print ''.rjust(20), "Data summary"
-        print ''.rjust(20), "***************"
-        print 'Dataset name'.ljust(20), ':', self.dataset_name
-        print 'Corpus size'.ljust(20), ':', self.corpus_size
-        print 'Errors in Gold Standard'.ljust(20), ':', len(self.gold_standard)
+        print(''.rjust(20), "***************")
+        print(''.rjust(20), "Data summary")
+        print(''.rjust(20), "***************")
+        print('Dataset name'.ljust(20), ':', self.dataset_name)
+        print('Corpus size'.ljust(20), ':', self.corpus_size)
+        print('Errors in Gold Standard'.ljust(20), ':', len(self.gold_standard))
         # print 'Error details [format: "(sentence num, word position) => original word, gold word"]'
         # for err_loc in self.gold_standard:
         #     print str(err_loc).rjust(20), " => ", self.gold_standard[err_loc][0].rjust(20),
