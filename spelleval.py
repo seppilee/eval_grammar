@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from __future__ import division
 import re
 import codecs
 import sys
@@ -196,7 +196,7 @@ class SpellEval:
                 error_found = False
                 i = 0;
                 while i < len(self.system_suggestions[err_loc]):
-                    if word_suggestions[i] == self.gold_standard[err_loc][1]:
+                    if word_suggestions[i] == self.gold_standard[err_loc]:
                         error_found = True 
                         self.tp_c[i] += 1  # right correction
                         j = i+1
