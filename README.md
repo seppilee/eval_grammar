@@ -5,7 +5,7 @@ This script reads in the source and compare with the golden target.
 The difference represents as markup tag with edit distance
 ```
 ## eval_grammar
-not yet working properly.
+need to be corrected!!
 
 ```
 The spellchecker accuracy is measured in terms of standard precision/recall are measured.
