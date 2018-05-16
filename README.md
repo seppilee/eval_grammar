@@ -1,5 +1,9 @@
 ## edit distance tagging
-
+```  
+usage: diff_sent.py [-h] [-s SOURCE] [-t TARGET] [-o OUTPUT_FILE]
+This script reads in the source and compare with the golden target.
+The difference represents as markup tag with edit distance
+```
 ## eval_grammar
 not yet working properly.
 
