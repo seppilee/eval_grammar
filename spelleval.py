@@ -45,7 +45,7 @@ Error correction
 class SpellEval:
     def __init__(self, output_filename, gold_filename):
         # for top-n accuracy (precision, recall etc)
-        self.nbest = 1
+        self.nbest = 10
 
         # name of the dataset
         self.dataset_name = "Grammar Correction"
@@ -95,10 +95,9 @@ class SpellEval:
         #self.gold_standard = self.get_error_locations(output_file_lines, gold_file_lines)
         
         # get suggestions from system output
-        self.gold_standard = self.get_suggestions_map(gold_file_lines)
-        print(self.gold_standard) 
+        self.gold_standard = self.get_suggestions_map(gold_file_lines)        
         self.system_suggestions = self.get_suggestions_map(out_file_lines)
-        print(self.system_suggestions)
+        #print(self.sys_tag_num, self.gold_tag_num) 
 
         self.corpus_size = len(out_file_lines)
 
@@ -156,11 +155,11 @@ class SpellEval:
     def get_suggestions_map(self, out_file_lines):
         i = 0
         suggestions_map = {}
-
         while i < len(out_file_lines):
             out_line = out_file_lines[i]
             out_line = re.sub(r'\n$', '', out_line)
-            matches = re.findall(r'(<(del|ins)> (.+?) \<\/\2\>)', out_line)
+            matches = re.findall(r'(<(del|ins)> (.+?) <\/\2>)', out_line)
+            #matches_num += len(matches)
             if matches:
                 for m in matches:
                     corr_type = m[1]
@@ -197,9 +196,9 @@ class SpellEval:
                 #print(word_suggestions)
                 error_found = False
                 i = 0;
-                #print(len(self.system_suggestions[err_loc]))
+                print(len(self.system_suggestions[err_loc]))
                 while i < len(self.system_suggestions[err_loc]):
-                    #print(word_suggestions[i], self.gold_standard[err_loc][i])
+                    print(word_suggestions[i], self.gold_standard[err_loc][i])
                     if word_suggestions[i] == self.gold_standard[err_loc][i]:
                         error_found = True 
                         self.tp_c[i] += 1  # right correction
@@ -227,11 +226,13 @@ class SpellEval:
                     m += 1
 
         # fill/update true/false negatives for correction/detection
-        self.tn_d = self.corpus_size - len(self.system_suggestions.keys())
+        self.tn_d = len(self.gold_standard.keys()) - len(self.system_suggestions.keys())
+        print(self.tn_d)
         for test_err_loc in self.gold_standard.keys():
-            if not test_err_loc in self.system_suggestions.keys():
-                self.tn_d -= 1          # reduce true negasitive detection
+            if not test_err_loc in self.system_suggestions.keys(): 
+                #self.tn_d -= 1          # reduce true negasitive detection
                 self.fn_d += 1          # increase false negative detection
+
         for i in range(self.nbest):
             self.fn_c[i] = self.fn_d
 
@@ -260,7 +261,7 @@ class SpellEval:
         print(''.rjust(20), "***************")
         print(''.rjust(20), "Error detection")
         print(''.rjust(20), "***************")
-        print('TP:', self.tp_d, 'FP:', self.fp_d, 'FN:', self.tn_d, 'FN:', self.fn_d)
+        print('TP:', self.tp_d, 'FP:', self.fp_d, 'TN:', self.tn_d, 'FN:', self.fn_d)
         print('Precision'.ljust(10), ':', '{:5.1f}'.format(self.precision_d * 100.0))
         print('Recall'.ljust(10), ':', '{:5.1f}'.format(self.recall_d * 100.0))
         print('F1-score'.ljust(10), ':', '{:5.1f}'.format(self.f1_d * 100.0))
@@ -291,7 +292,7 @@ class SpellEval:
         print(''.rjust(20), "***************")
         print('Dataset name'.ljust(20), ':', self.dataset_name)
         print('Corpus size'.ljust(20), ':', self.corpus_size)
-        print('Errors in Gold Standard'.ljust(20), ':', len(self.gold_standard))
+        print('Errors in Gold Standard/System suggestions'.ljust(20), ':', len(self.gold_standard) ,"/", len(self.system_suggestions))
         # print 'Error details [format: "(sentence num, word position) => original word, gold word"]'
         # for err_loc in self.gold_standard:
         #     print str(err_loc).rjust(20), " => ", self.gold_standard[err_loc][0].rjust(20),
