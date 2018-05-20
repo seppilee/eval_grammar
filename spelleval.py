@@ -89,8 +89,8 @@ class SpellEval:
         self.close_files(fH)
 
         # some required overall and specific info
-        #self.gold_content, self.corpus_size) = self.read_file_into_map(gold_file_lines)
-
+        self.gold_content, self.token_size = self.read_file_into_map(gold_file_lines)
+        #print(self.token_size)
         # each error entry is a tuple of sentence number and word number
         #self.gold_standard = self.get_error_locations(output_file_lines, gold_file_lines)
         
@@ -224,14 +224,19 @@ class SpellEval:
                 while m < self.nbest:
                     self.fp_c[m] += 1
                     m += 1
-
+        #TP gold == system
+        #   gold != system
+        #FP => not errors in gold data,  TN=> correct words, FN=> missing error of gold data
         # fill/update true/false negatives for correction/detection
         self.tn_d = len(self.gold_standard.keys()) - len(self.system_suggestions.keys())
         print(self.tn_d)
-        for test_err_loc in self.gold_standard.keys():
-            if not test_err_loc in self.system_suggestions.keys(): 
+        self.tn_d = self.token_size
+        for test_err_loc in self.system_suggestions.keys():
+            if not test_err_loc in self.gold_standard.keys(): 
                 #self.tn_d -= 1          # reduce true negasitive detection
-                self.fn_d += 1          # increase false negative detection
+                self.fn_d += 1           # increase false negative detection
+        
+
 
         for i in range(self.nbest):
             self.fn_c[i] = self.fn_d
