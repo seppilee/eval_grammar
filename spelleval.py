@@ -47,7 +47,7 @@ class SpellEval:
     def __init__(self, output_filename, gold_filename):
         # for top-n accuracy (precision, recall etc)
         self.nbest = 20
-        
+
         # name of the dataset
         self.dataset_name = "Grammar Correction"
 
@@ -98,7 +98,7 @@ class SpellEval:
         # get suggestions from system output
         self.gold_standard = self.get_suggestions_map(gold_file_lines)        
         self.system_suggestions = self.get_suggestions_map(out_file_lines)
-        #print(self.sys_tag_num, self.gold_tag_num) 
+        #print(self.gold_standard) 
 
         self.corpus_size = len(out_file_lines)
 
@@ -258,7 +258,7 @@ class SpellEval:
         self.precision_d = (1.0 * self.tp_d) / (self.tp_d + self.fp_d)
         self.recall_d = (1.0 * self.tp_d) / (self.tp_d + self.fn_d)
         self.f1_d = 2 * (self.precision_d * self.recall_d) / (self.precision_d + self.recall_d)
-        self.f05_d = 1.25 * (self.precision_d * self.recall_d) / (0.25 * self.precision_d) + self.recall_d
+        self.f05_d = 1.25 * (self.precision_d * self.recall_d) / ((0.25 * self.precision_d) + self.recall_d)
         self.accuracy_d = (self.tp_d + self.tn_d)/ (self.tp_d + self.tn_d + self.fp_d + self.fn_d)
 
         # calculate precision/recall, f-measure for spelling correction
@@ -267,7 +267,7 @@ class SpellEval:
             self.recall_c[i] = (1.0 * self.tp_c[i]) / (self.tp_c[i] + self.fn_c[i])
             self.f1_c[i] = 2 * (self.precision_c[i] * self.recall_c[i]) / (self.precision_c[i] + self.recall_c[i])
             # F0.5-measure   - 1.25 * (precision * recall) /(0.25 * precision) +recall
-            self.f05_c[i] = 1.25 * (self.precision_c[i] * self.recall_c[i]) / (0.25 * self.precision_c[i]) + self.recall_c[i]
+            self.f05_c[i] = 1.25 * (self.precision_c[i] * self.recall_c[i]) / ((0.25 * self.precision_c[i]) + self.recall_c[i])
             self.accuracy_c[i] = (self.tp_c[i] + self.tn_c[i])/ (self.tp_c[i] + self.tn_c[i] + self.fp_c[i] + self.fn_c[i])
 
 
