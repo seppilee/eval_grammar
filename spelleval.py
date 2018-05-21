@@ -4,6 +4,7 @@ from __future__ import division
 import re
 import codecs
 import sys
+import itertools
 
 
 """
@@ -197,18 +198,25 @@ class SpellEval:
                 error_found = False
                 i = 0;
                 print(len(self.system_suggestions[err_loc]))
+                #print(len(word_suggestions[i]), len(self.gold_standard[err_loc][i]))
                 while i < len(self.system_suggestions[err_loc]):
-                    print(word_suggestions[i], self.gold_standard[err_loc][i])
-                    if word_suggestions[i] == self.gold_standard[err_loc][i]:
+                    #print(word_suggestions[i], self.gold_standard[err_loc][i])
+                    try:
+                        if word_suggestions[i] == self.gold_standard[err_loc][i]:
+                            error_found = True 
+                            self.tp_c[i] += 1  # right correction
+                            j = i+1
+                            while j < len(self.system_suggestions[err_loc]):
+                                self.tp_c[j] += 1
+                                j += 1
+                            break
+                        else:
+                            self.fp_c[i] += 1  # fales correction
+                    except IndexError:
+                        #self.gold_standard[err_loc][i] = None 
                         error_found = True 
-                        self.tp_c[i] += 1  # right correction
-                        j = i+1
-                        while j < len(self.system_suggestions[err_loc]):
-                            self.tp_c[j] += 1
-                            j += 1
-                        break
-                    else:
-                        self.fp_c[i] += 1  # fales correction
+                        self.tp_c[i] += 1 
+
                     i += 1
                 if len(self.system_suggestions[err_loc]) < self.nbest:
                         k = len(self.system_suggestions[err_loc])
@@ -225,18 +233,17 @@ class SpellEval:
                     self.fp_c[m] += 1
                     m += 1
         #TP gold == system
-        #   gold != system
-        #FP => not errors in gold data,  TN=> correct words, FN=> missing error of gold data
-        # fill/update true/false negatives for correction/detection
-        self.tn_d = len(self.gold_standard.keys()) - len(self.system_suggestions.keys())
-        print(self.tn_d)
-        self.tn_d = self.token_size
-        for test_err_loc in self.system_suggestions.keys():
-            if not test_err_loc in self.gold_standard.keys(): 
+        #gold != system
+        #  FP => not errors in gold data,  TN=> correct words, FN=> missing error of gold data
+        #  fill/update true/false negatives for correction/detection
+        self.tn_d = abs(len(self.gold_standard.keys()) - len(self.system_suggestions.keys()))
+        #print(self.tn_d)
+        #self.tn_d = self.token_size
+        for test_err_loc in self.gold_standard.keys():
+            if not test_err_loc in self.system_suggestions.keys(): 
                 #self.tn_d -= 1          # reduce true negasitive detection
                 self.fn_d += 1           # increase false negative detection
         
-
 
         for i in range(self.nbest):
             self.fn_c[i] = self.fn_d
