@@ -46,8 +46,8 @@ Error correction
 class SpellEval:
     def __init__(self, output_filename, gold_filename):
         # for top-n accuracy (precision, recall etc)
-        self.nbest = 10
-
+        self.nbest = 20
+        
         # name of the dataset
         self.dataset_name = "Grammar Correction"
 
@@ -168,6 +168,8 @@ class SpellEval:
                     sugg_new = re.sub(r'\s+', '|', sugg_orig)
                     sugg_pat_orig = r'<' + corr_type + '> ' +sugg_orig + ' </' + corr_type +'>'
                     sugg_pat_orig = sugg_pat_orig.replace(')', '\)')
+                    sugg_pat_orig = sugg_pat_orig.replace(']', '\]')
+                    sugg_pat_orig = sugg_pat_orig.replace('[', '\[')
                     sugg_pat_orig = sugg_pat_orig.replace('(', '\(')
                     sugg_pat_new = r'<' + corr_type + '>' + sugg_new + '</' + corr_type +'>'
                     out_line = re.sub(sugg_pat_orig, sugg_pat_new, out_line, count=1)
@@ -197,7 +199,7 @@ class SpellEval:
                 #print(word_suggestions)
                 error_found = False
                 i = 0;
-                print(len(self.system_suggestions[err_loc]))
+                #print(len(self.system_suggestions[err_loc]))
                 #print(len(word_suggestions[i]), len(self.gold_standard[err_loc][i]))
                 while i < len(self.system_suggestions[err_loc]):
                     #print(word_suggestions[i], self.gold_standard[err_loc][i])
