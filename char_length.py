@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 #-*- coding: UTF-8 -*-
 
 import sys
@@ -7,30 +7,30 @@ import codecs
 from itertools import izip
 import glob
 
-file1l =[]
-file2l =[]
+#utf-8 encoding for python2
+reload(sys)
+sys.setdefaultencoding("UTF-8")
 
 
-
-file1l = glob.glob("*.ko")
-file2l = glob.glob("*.en")
-
-file1l.sort()
-file2l.sort()
-
+line_num = 0
+char_length = 0
+sum_char_length = 0
+char_lengths = []
+threshold = 150
 
 def count_letters(word):
     return len(filter(lambda x: x not in " ", word))
 
-i = 0
-while i < (len(file1l)):
+for line in sys.stdin:
+    line = re.sub("\r|\n|\uFEFF", "", line)
+    char_length = len(line.decode('utf8')) - line.count(' ')
+    line_num += 1
+    sum_char_length += char_length
+    char_lengths.append(char_length)
 
-# print i, file1l[i], file2l[i]
-with open(file1l[i]) as textfile1, open(file2l[i]) as textfile2:
+    if line_num % 10000 == 0 :
+        print "processing:", line_num
+    #print line, "\t", char_length
 
-    for x, y in izip(textfile1, textfile2):
-        x.rstrip()
-        y.rstrip()
-        print "%s\t%s" % (count_letters(x), len(y.decode('utf8')))
-i += 1
-
+print "total lines:", line_num, "\tmean length:", sum_char_length/line_num, "\tmax length:", max(char_lengths)
+print "long sentences:",len([x for x in char_lengths if x >= threshold])
