@@ -3,7 +3,6 @@
 
 '''
 ATISDATA evalulation metric
---dia_act_nl_pairs.v6.json: agt and usr have their own NL.
 '''
 
 import numpy
