@@ -7,6 +7,7 @@ import random
 replacement_patterns = []
 matched_num = 1
 
+#todo stdin for any file
 
 with open('aspell_dict', 'r') as f:
     for line in f:
