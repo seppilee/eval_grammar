@@ -6,6 +6,7 @@ import codecs
 import sys
 import itertools
 
+#todo: 
 
 """
 Evaluation Measures
