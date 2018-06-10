@@ -7,6 +7,26 @@ import re
 reload(sys)
 sys.setdefaultencoding("UTF-8")
 
+def ksyl_split(s):
+	o = ""
+	sI = [u"ㄱ", u"ㄲ", u"ㄴ", u"ㄷ", u"ㄸ", u"ㄹ", u"ㅁ", u"ㅂ", u"ㅃ", u"ㅅ", u"ㅆ", u"ㅇ", u"ㅈ", u"ㅉ", u"ㅊ", u"ㅋ", u"ㅌ", u"ㅍ", u"ㅎ"]
+	sV = [u"ㅏ", u"ㅐ", u"ㅑ", u"ㅒ", u"ㅓ", u"ㅔ", u"ㅕ", u"ㅖ", u"ㅗ", u"ㅘ", u"ㅙ", u"ㅚ", u"ㅛ", u"ㅜ", u"ㅝ", u"ㅞ", u"ㅟ", u"ㅠ", u"ㅡ", u"ㅢ", u"ㅣ"]
+	sF = [u"", u"ㄱ", u"ㄲ", u"ㄳ", u"ㄴ", u"ㄵ", u"ㄶ", u"ㄷ", u"ㄹ", u"ㄺ", u"ㄻ", u"ㄼ", u"ㄽ", u"ㄾ", u"ㄿ", u"ㅀ", u"ㅁ", u"ㅂ", u"ㅄ", u"ㅅ", u"ㅆ", u"ㅇ", u"ㅈ", u"ㅊ", u"ㅋ", u"ㅌ", u"ㅍ", u"ㅎ"]
+	for c in s:
+		u = ord(c)
+		if u < 0xAC00 or u > 0xD7A3:
+			o += c
+			continue
+		u -= 0xAC00
+		f = u % 28
+		v = (u - f) / 28 % 21
+		i = ((u - f) / 28 - v) / 21
+		o += sI[i]
+		if v != 18:
+			o += sV[v]
+		if f > 0:
+			o += sF[f]
+	return o
 
 def dld(a, b, wI = 1, wD = 1, wS = 1): # weighted Damerau–Levenshtein distance with backtrace
 	d = [[0 for i in range(len(b) + 1)] for j in range(len(a) + 1)]
@@ -64,7 +84,7 @@ for line in sys.stdin:
 	line = line.decode(encoding = "UTF-8")
 	line = re.sub(" |\r|\n|\uFEFF", "", line)
 	tkn = line.split("\t")
-	sys.stdout.write("%s\t%s\t" % (tkn[0], tkn[1]))
+	#sys.stdout.write("%s\t%s\t" % (tkn[0], tkn[1]))
 	# sys.stdout.write("\n")
 	a = re.sub("\(.+?\)", "", tkn[0])
 	x = ""
@@ -72,6 +92,7 @@ for line in sys.stdin:
 	for i in range(len(tkn[1])):
 		for j in range(i + 1, len(tkn[1]) + 1):
 			b = tkn[1][i:j]
+			print ksyl_split(a)
 			z = dld(a, b, 1, 1, 1)
 			# sys.stdout.write("%s\t%d\n" % (b, z))
 			if y > z or y == z and len(b) > len(x):
