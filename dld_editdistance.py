@@ -8,18 +8,19 @@ reload(sys)
 sys.setdefaultencoding("UTF-8")
 
 def ksyl_split(s):
+	
 	o = ""
-	"""
+	
 	sI = [u"ㄱ", u"ㄲ", u"ㄴ", u"ㄷ", u"ㄸ", u"ㄹ", u"ㅁ", u"ㅂ", u"ㅃ", u"ㅅ", u"ㅆ", u"ㅇ", u"ㅈ", u"ㅉ", u"ㅊ", u"ㅋ", u"ㅌ", u"ㅍ", u"ㅎ"]
 	sV = [u"ㅏ", u"ㅐ", u"ㅑ", u"ㅒ", u"ㅓ", u"ㅔ", u"ㅕ", u"ㅖ", u"ㅗ", u"ㅘ", u"ㅙ", u"ㅚ", u"ㅛ", u"ㅜ", u"ㅝ", u"ㅞ", u"ㅟ", u"ㅠ", u"ㅡ", u"ㅢ", u"ㅣ"]
 	sF = [u"", u"ㄱ", u"ㄲ", u"ㄳ", u"ㄴ", u"ㄵ", u"ㄶ", u"ㄷ", u"ㄹ", u"ㄺ", u"ㄻ", u"ㄼ", u"ㄽ", u"ㄾ", u"ㄿ", u"ㅀ", u"ㅁ", u"ㅂ", u"ㅄ", u"ㅅ", u"ㅆ", u"ㅇ", u"ㅈ", u"ㅊ", u"ㅋ", u"ㅌ", u"ㅍ", u"ㅎ"]
-    """ 
+     
     #german
+	"""
 	sI  = ['g', 'gg', 'n', 'd', 'dd', 'r', 'm', 'b', 'bb', 's', 'ss', '', 'j', 'jj', 'c', 'k', 't', 'p', 'h']
 	sV = ['a', 'ae', 'ya', 'yae', 'eo', 'e', 'yeo', 'ye', 'o', 'wa', 'wae', 'oe', 'yo', 'u', 'weo', 'we', 'wi', 'yu', 'eu', 'yi', 'i']
 	sF  = ['', 'g', 'gg', 'gs', 'n', 'nj', 'nh', 'd', 'l', 'lg', 'lm', 'lb', 'ls', 'lt', 'lp', 'lh', 'm', 'b', 'bs', 's', 'ss', 'ng', 'j', 'c', 'k', 't', 'p', 'h']
-	
-
+	"""
 
 
 	for c in s:
@@ -72,8 +73,8 @@ def dld(a, b, wI = 1, wD = 1, wS = 1): # weighted Damerau–Levenshtein distance
 		elif i == 2:
 			z += (j - d[x][y]) * wS
 			x, y = x + 1, y + 1
-		# sys.stderr.write("(%d, %d) : %d\n" % (x, y, z))
-	'''
+		#sys.stderr.write("(%d, %d) : %d\n" % (x, y, z))
+	
 	sys.stderr.write("dld(%s, %s) = %d\n" % (a, b, z))
 	for i in range(len(a) + 1):
 		if i == 0:
@@ -86,7 +87,7 @@ def dld(a, b, wI = 1, wD = 1, wS = 1): # weighted Damerau–Levenshtein distance
 				sys.stderr.write("%s " % a[i - 1])
 			sys.stderr.write("%2d " % d[i][j])
 		sys.stderr.write("\n")
-	'''
+	
 	return z
 	# return d[len(a) - 1][len(b) - 1] # without weight
 
@@ -109,8 +110,3 @@ for line in sys.stdin:
 				x = b
 				y = z
 	sys.stdout.write("%s\t%d\n" % (x, y))
-    #korean
-     #sI = [u"ㄱ", u"ㄲ", u"ㄴ", u"ㄷ", u"ㄸ", u"ㄹ", u"ㅁ", u"ㅂ", u"ㅃ", u"ㅅ", u"ㅆ", u"ㅇ", u"ㅈ", u"ㅉ", u"ㅊ", u"ㅋ", u"ㅌ", u"ㅍ", u"ㅎ"]
-     #sV = [u"ㅏ", u"ㅐ", u"ㅑ", u"ㅒ", u"ㅓ", u"ㅔ", u"ㅕ", u"ㅖ", u"ㅗ", u"ㅘ", u"ㅙ", u"ㅚ", u"ㅛ", u"ㅜ", u"ㅝ", u"ㅞ", u"ㅟ", u"ㅠ", u"ㅡ", u"ㅢ", u"ㅣ"]
-     #sF = [u"", u"ㄱ", u"ㄲ", u"ㄳ", u"ㄴ", u"ㄵ", u"ㄶ", u"ㄷ", u"ㄹ", u"ㄺ", u"ㄻ", u"ㄼ", u"ㄽ", u"ㄾ", u"ㄿ", u"ㅀ", u"ㅁ", u"ㅂ", u"ㅄ", u"ㅅ", u"ㅆ", u
-
