@@ -12,11 +12,16 @@ FILE_TESTS = 'test.txt'
 
 # Set to true if you want to copy first line from main
 IS_CSV = False
+IS_PER = False
 
 # Set percentage for train, valid, test dataset
 PERCENT_TRAIN = 98
 PERCENT_VALID = 1
 PERCENT_TESTS = 1
+
+# Set line number for train, valid, test dataset
+num_valid = 500
+num_tests = 580
 
 data = [l for l in open(DATASET_FILE, 'r')]
 
@@ -31,9 +36,12 @@ if IS_CSV:
     data = data[1:len(data)]
 
 num_of_data = len(data)
-num_train = int((PERCENT_TRAIN/100.0)*num_of_data)
-num_valid = int((PERCENT_VALID/100.0)*num_of_data)
-num_tests = int((PERCENT_TESTS/100.0)*num_of_data)
+num_train = int(num_of_data - num_valid - num_tests)
+
+if IS_PER:
+    num_train = int((PERCENT_TRAIN/100.0)*num_of_data)
+    num_valid = int((PERCENT_VALID/100.0)*num_of_data)
+    num_tests = int((PERCENT_TESTS/100.0)*num_of_data)
 
 data_fractions = [num_train, num_valid, num_tests]
 split_data = [[],[],[]]
