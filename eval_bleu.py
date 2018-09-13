@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
 '''
 According to this paper: http://www.aclweb.org/anthology/I/I05/I05-2014.pdf
