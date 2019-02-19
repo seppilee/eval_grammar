@@ -34,13 +34,31 @@ def create_parser():
     return parser
 
 def extract_ngram(line, num_ngram):
-	words = "".join(line.split())
-	print(words)
+	words = "".join(line.split()) # space ignored
+	#words = line.strip()
+	result = defaultdict(lambda: defaultdict(int)) #?
+	for length in range(num_ngram):
+		for start in range(len(words)):
+		    end = start + length + 1
+		    if end <= len(words):
+		    	result[length][tuple(words[start:end])] += 1
+	return result
+    #{0: defaultdict(<class 'int'>, {('c',): 1, ('a',): 1, ('t',): 1}), 
+     #1: defaultdict(<class 'int'>, {('c', 'a'): 1, ('a', 't'): 1}), 
+     #2: defaultdict(<class 'int'>, {('c', 'a', 't'): 1})}
+
 def main(args):
+    #1) read file
 	for line in args.ref:
 		line2 = args.hyp.readline()
+    #2) extraction of Ngam
 		ngram = extract_ngram(line2, num_ngram=4)
-
+    #3) get correct matching
+    	#get_correct()
+    #4) calurate Fscore
+        #f1()
+    #5) output
+		print(ngram)
 
 if __name__ == '__main__':
 
