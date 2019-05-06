@@ -56,8 +56,12 @@ with open(input_path) as input_file, open(output_src_path, 'w') as output_src_fi
                 cur_words.append("</I: "+ error_type + ">")
                 corrected[sid] = " ".join(cur_words)
             else:
-                corrected[sid] = "<R> " + info[2] + " </R: " + error_type + ">"
-                pos = 0
+            	if not info[2]:
+            	   corrected[sid] = "<D: " + error_type + ">"
+            	   pos = 0 
+            	else:
+                    corrected[sid] = "<R> " + info[2] + " </R: " + error_type + ">"
+                    pos = 0
             prev_sid = sid
             prev_eid = eid
         else:
